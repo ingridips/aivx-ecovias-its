@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIVX · ITS Integrado · Ecovias Araguaia</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* ─── RESET ─────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -43,7 +45,7 @@ body{margin:0;}
   scroll-snap-align:start;
   scroll-snap-stop:always;
   position:relative;overflow:hidden;
-  display:flex;flex-direction:column;justify-content:center;
+  display:flex;flex-direction:column;justify-content:safe center;
   background:var(--bg);
   font-family:var(--sans);
   color:var(--white);
@@ -70,7 +72,7 @@ nav{
 }
 .nav-center{display:flex;gap:2rem;}
 .nav-center a{
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--hint);text-decoration:none;transition:color .2s;
 }
 .nav-center a:hover{color:var(--white);}
@@ -136,6 +138,8 @@ nav{
 .inner{
   max-width:1080px;width:100%;margin:0 auto;
   padding:0 3rem;
+  transform:scale(var(--deck-s,1));
+  transform-origin:top center;
 }
 .inner.pt{padding-top:72px;}
 
@@ -245,7 +249,7 @@ nav{
   border-radius:6px;overflow:hidden;
   border:1px solid var(--border-w);
   position:relative;
-  height:220px;
+  height:155px;
 }
 .noc-img-block img{
   width:100%;height:100%;object-fit:cover;object-position:center 30%;
@@ -307,6 +311,22 @@ nav{
   border:1px solid var(--border-w);border-radius:2px;
   padding:3px 8px;display:inline-block;margin-top:4px;
 }
+
+/* INNOVATION CARDS */
+.innov-cards{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border-w);border-radius:4px;overflow:hidden;
+  margin-bottom:1.5rem;
+}
+.icard{
+  padding:1.75rem 1.5rem;background:var(--surface);
+  position:relative;transition:background .2s;
+}
+.icard:first-child{background:var(--surface2);border-top:2px solid var(--teal);}
+.icard:hover{background:var(--surface2);}
+.icard-ico{font-size:22px;margin-bottom:1rem;}
+.icard h4{font-size:14px;font-weight:600;margin-bottom:.5rem;line-height:1.3;color:var(--white);}
+.icard p{font-size:12px;color:var(--muted);line-height:1.6;}
 
 /* TR REF BOX */
 .tr-ref{
@@ -391,29 +411,25 @@ nav{
 .rm-head{font-size:2rem;font-weight:700;line-height:1.1;max-width:580px;margin-bottom:.75rem;}
 .rm-sub{font-size:.95rem;color:var(--muted);max-width:560px;line-height:1.75;margin-bottom:2rem;}
 
-.phases{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--border-w);border-radius:4px;overflow:hidden;
-}
-.phase{padding:1.75rem 1.25rem;background:var(--surface);}
-.phase.active{background:var(--surface2);}
-.ph-tag{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--violet);margin-bottom:.5rem;font-family:var(--mono);}
-.ph-period{font-family:var(--mono);font-size:10px;color:var(--hint);margin-bottom:1rem;}
-.phase h5{font-size:13px;font-weight:600;margin-bottom:.75rem;line-height:1.3;}
-.phase ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
-.phase li{font-size:11px;color:var(--muted);padding-left:1rem;position:relative;line-height:1.5;}
-.phase li::before{content:'→';position:absolute;left:0;color:var(--violet);font-size:10px;}
-
-.risk-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;
-}
-.rcard{
-  padding:1.25rem;border:1px solid var(--border-w);
-  border-radius:3px;background:var(--surface);
-}
-.rcard-ico{font-size:16px;margin-bottom:.5rem;}
-.rcard h6{font-size:12px;font-weight:600;margin-bottom:.4rem;}
-.rcard p{font-size:11px;color:var(--muted);line-height:1.6;}
+/* ── Roadmap — timeline rows ── */
+.rm-rows{display:flex;flex-direction:column;gap:.55rem;margin:1.75rem 0 2rem;}
+.rm-row{display:grid;grid-template-columns:4px 3rem 1fr auto;gap:1.5rem;align-items:center;padding:.55rem 0;}
+.rm-accent{border-radius:2px;align-self:stretch;min-height:3.2rem;}
+.rm-num{font-family:var(--mono);font-size:3rem;font-weight:700;opacity:.14;line-height:1;letter-spacing:-.05em;color:var(--fg);}
+.rm-info{display:flex;flex-direction:column;gap:.4rem;}
+.rm-name{font-size:1.05rem;font-weight:700;color:var(--fg);}
+.rm-chips{display:flex;gap:0;flex-wrap:wrap;align-items:center;}
+.rm-chips span{font-size:.78rem;padding:0;border:none;background:none;border-radius:0;color:rgba(232,230,240,.52);}
+.rm-chips span:not(:last-child)::after{content:' · ';color:rgba(232,230,240,.2);}
+.rm-when{font-family:var(--mono);font-size:.72rem;color:var(--hint);white-space:nowrap;text-align:right;}
+.rm-row.v1 .rm-accent{background:var(--violet);}
+.rm-row.v2 .rm-accent{background:#74a8ff;}
+.rm-row.v3 .rm-accent{background:var(--teal);}
+.rm-row.v4 .rm-accent{background:var(--green);}
+/* Commitment strip */
+.rm-commits{display:flex;gap:2.5rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.06);}
+.rmcmt{display:flex;align-items:center;gap:.55rem;font-size:.85rem;color:rgba(232,230,240,.48);}
+.rmcmt-ico{font-size:1rem;}
 
 /* ─────────────────────────────────────────────────── */
 /*  SLIDE 6 — PRÓXIMOS PASSOS                          */
@@ -477,6 +493,116 @@ nav{
 }
 .close-meta-r{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--hint);text-align:right;}
 
+/* ─────────────────────────────────────────────────── */
+/*  SLIDE MAP — COBERTURA                              */
+/* ─────────────────────────────────────────────────── */
+.map-grid{
+  display:grid;grid-template-columns:1fr 300px;
+  gap:3rem;align-items:center;
+}
+.map-hed{font-size:2rem;font-weight:700;line-height:1.1;margin-bottom:.75rem;}
+.map-sub{font-size:.95rem;color:var(--muted);max-width:440px;line-height:1.75;margin-bottom:1.5rem;}
+.map-bases{display:flex;flex-direction:column;gap:.5rem;}
+.mbase{
+  display:grid;grid-template-columns:10px 1fr;gap:.75rem;align-items:center;
+  padding:.75rem 1rem;border:1px solid var(--border-w);border-radius:3px;
+  background:var(--surface);transition:background .2s,border-color .2s;cursor:default;
+}
+.mbase:hover{background:var(--surface2);border-color:var(--border);}
+.mbase-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.mbase-dot.go{background:var(--violet);box-shadow:0 0 6px var(--violet);}
+.mbase-dot.to{background:var(--teal);box-shadow:0 0 6px var(--teal);}
+.mbase-city{font-size:13px;font-weight:600;color:var(--white);}
+.mbase-role{font-size:11px;color:var(--muted);margin-top:2px;}
+.map-svg-wrap{
+  background:var(--surface);border:1px solid var(--border-w);border-radius:6px;
+  padding:1rem 1.5rem;
+}
+@keyframes pulse-ring{
+  0%,100%{opacity:.18;}
+  50%{opacity:.45;}
+}
+.pulse{animation:pulse-ring 2.4s ease-in-out infinite;}
+.pulse-delay{animation:pulse-ring 2.4s ease-in-out infinite;animation-delay:.9s;}
+
+/* ─── LEAFLET TOOLTIP ─────────────────────────────── */
+.aivx-tooltip{
+  background:rgba(8,8,16,.85)!important;
+  border:1px solid rgba(255,208,96,.25)!important;
+  border-radius:3px!important;
+  color:rgba(232,230,240,.7)!important;
+  font-family:'DM Sans',sans-serif!important;
+  font-size:11px!important;
+  padding:3px 8px!important;
+  box-shadow:none!important;
+  white-space:nowrap;
+}
+.aivx-tooltip::before{display:none!important;}
+.mbase-dot.green{background:#67ff8e;box-shadow:0 0 6px #67ff8e;}
+.mbase-dot.gold{background:#ffd060;box-shadow:0 0 6px #ffd060;}
+
+/* ─── LEAFLET OVERRIDES ───────────────────────────── */
+.leaflet-popup-content-wrapper{
+  background:rgba(8,8,16,.96)!important;
+  border:1px solid rgba(116,96,255,.3)!important;
+  border-radius:4px!important;
+  box-shadow:0 8px 32px rgba(0,0,0,.6)!important;
+  padding:0!important;
+}
+.leaflet-popup-content{margin:0!important;}
+.leaflet-popup-tip-container{display:none!important;}
+.leaflet-control-zoom a{
+  background:rgba(8,8,16,.9)!important;
+  color:rgba(116,96,255,.8)!important;
+  border-color:rgba(116,96,255,.25)!important;
+  font-size:16px!important;
+}
+.leaflet-control-zoom a:hover{
+  background:rgba(116,96,255,.15)!important;
+  color:#fff!important;
+}
+
+/* ─── FONT SIZE INCREASES ─────────────────────────── */
+body{font-size:17px;}
+.hero h1{font-size:clamp(3rem,5.5vw,5.4rem);}
+.hero-sub{font-size:1.15rem;max-width:620px;}
+.kpi-n{font-size:2.4rem;}
+.kpi-l{font-size:11px;}
+.prob-hed{font-size:2.2rem;}
+.prob-body{font-size:1rem;}
+.pcard-t{font-size:14px;}
+.pcard-b{font-size:13px;}
+.opp-head{font-size:2.2rem;}
+.opp-sub{font-size:1rem;}
+.ocard h4{font-size:15px;}
+.ocard p{font-size:13px;}
+.pillar h5{font-size:14px;}
+.pillar p{font-size:12px;}
+.innov-head{font-size:2.2rem;}
+.innov-sub{font-size:1rem;}
+.icard h4{font-size:15px;}
+.icard p{font-size:13px;}
+.fin-head{font-size:2.2rem;}
+.fin-sub{font-size:1rem;}
+.fnum{font-size:2.8rem;}
+.fline{font-size:13px;}
+.fline-v{font-size:14px;}
+.fnote{font-size:12px;}
+.rm-head{font-size:2.2rem;}
+.rm-name{font-size:1.15rem;}
+.rm-chips span{font-size:.78rem;}
+.rm-when{font-size:.78rem;}
+.rmcmt{font-size:.9rem;}
+.step h5{font-size:15px;}
+.step p{font-size:13px;}
+.mbase-city{font-size:14px;}
+.mbase-role{font-size:12px;}
+.close-p{font-size:1.1rem;}
+.sav-text h4{font-size:16px;}
+.sav-text p{font-size:13px;}
+.tr-ref p{font-size:13px;}
+.tr-stat-n{font-size:1.4rem;}
+
 /* ─── SCROLLBAR ───────────────────────────────────── */
 ::-webkit-scrollbar{display:none;}
 body{-ms-overflow-style:none;scrollbar-width:none;}
@@ -495,7 +621,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   border-radius:6px;overflow:hidden;
   border:1px solid var(--border-w);
   position:relative;
-  height:220px;
+  height:155px;
 }
 .noc-img-block img{
   width:100%;height:100%;object-fit:cover;object-position:center 30%;
@@ -513,11 +639,12 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   color:var(--teal);font-family:var(--mono);
 }
 .pillars{grid-template-columns:1fr 1fr;}
-  .innov-grid .irow{grid-template-columns:1fr;}
-  .irow.header{display:none;}
+  .map-grid{grid-template-columns:1fr;}
+  .map-svg-wrap{display:none;}
+  .innov-cards{grid-template-columns:1fr 1fr;}
   .fin-cols{grid-template-columns:1fr;}
-  .phases{grid-template-columns:1fr 1fr;}
-  .risk-grid{grid-template-columns:1fr 1fr;}
+  .rm-row{grid-template-columns:4px 2rem 1fr auto;gap:1rem;}
+  .rm-num{font-size:2.2rem;}
   .steps-wrap{grid-template-columns:1fr;}
   .hero-kpis{flex-wrap:wrap;gap:1.5rem;}
   .savings-row{flex-direction:column;gap:1rem;}
@@ -540,7 +667,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
     <a href="#" onclick="goTo(3)">Inovação</a>
     <a href="#" onclick="goTo(4)">Financeiro</a>
     <a href="#" onclick="goTo(5)">Roadmap</a>
-    <a href="#" onclick="goTo(6)">Próximos Passos</a>
+    <a href="#" onclick="goTo(6)">Cobertura</a>
+    <a href="#" onclick="goTo(7)">Próximos Passos</a>
   </div>
   <div class="nav-right"></div>
 </nav>
@@ -554,34 +682,26 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 <div class="slide" id="s0">
   <div class="glow-v" style="width:700px;height:700px;top:-200px;right:-200px;"></div>
   <div class="glow-t" style="width:500px;height:400px;bottom:-150px;left:-100px;"></div>
-  <div class="inner hero">
-    <div class="hero-eyebrow">Proposta Estratégica · ITS Integrado · Ecovias Araguaia · 2026</div>
+  <div class="inner hero pt">
+    <div class="hero-eyebrow">ITS Integrado · Ecovias Araguaia · 2026</div>
     <h1>
       Uma rodovia de<br>
-      <span class="accent">R$ 50M</span> merece<br>
+      <span class="accent">851 km</span> merece<br>
       gestão integrada.
     </h1>
-    <p class="hero-sub">Você já fez o maior investimento. Agora é hora de protegê-lo com eficiência, previsibilidade e inteligência tecnológica, em um único contrato estratégico.</p>
+    <p class="hero-sub">BR-153 / 414 / 080, uma das maiores concessões rodoviárias em extensão do país. Uma infraestrutura deste porte exige manutenção integrada, dados centralizados e inovação contínua.</p>
     <div class="hero-kpis">
       <div>
-        <div class="kpi-n">850 km</div>
+        <div class="kpi-n">851 km</div>
         <div class="kpi-l">BR-153 / 414 / 080</div>
       </div>
       <div>
-        <div class="kpi-n">533</div>
-        <div class="kpi-l">câmeras PTZ instaladas</div>
-      </div>
-      <div>
-        <div class="kpi-n">3</div>
-        <div class="kpi-l">contratos fragmentados hoje</div>
-      </div>
-      <div>
-        <div class="kpi-n danger">R$ 730k</div>
-        <div class="kpi-l">investimento mensal atual</div>
+        <div class="kpi-n">700+</div>
+        <div class="kpi-l">ativos ITS monitorados</div>
       </div>
     </div>
   </div>
-  <div class="slide-num">01 / 08</div>
+  <div class="slide-num">01 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -594,65 +714,29 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
     <div class="prob-grid">
       <div>
         <h2 class="prob-hed">O modelo fragmentado custa mais<br>do que aparece na <span>fatura</span>.</h2>
-        <p class="prob-body">Três fornecedores, três ordens de serviço, três pontos de falha. Quando uma câmera cai, quem é responsável: o fornecedor do CFTV, da fibra ou da rede? Coordenar essa resposta tem um custo invisível mas real.</p>
-        <table class="contract-table">
-          <thead>
-            <tr>
-              <th>Escopo</th>
-              <th>Mensal</th>
-              <th>Anual</th>
-              <th>Modelo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="ct-name">Manutenção CFTV<small>533 câmeras PTZ · preventiva e corretiva</small></td>
-              <td class="ct-val">R$ 450k</td>
-              <td class="ct-val" style="color:var(--hint)">R$ 5,4M</td>
-              <td><span class="ct-tag tag-r">Fragmentado</span></td>
-            </tr>
-            <tr>
-              <td class="ct-name">Manutenção Fibra<small>backbone 850km · emendas · DIOs</small></td>
-              <td class="ct-val">R$ 200k</td>
-              <td class="ct-val" style="color:var(--hint)">R$ 2,4M</td>
-              <td><span class="ct-tag tag-r">Fragmentado</span></td>
-            </tr>
-            <tr>
-              <td class="ct-name">Manutenção Contínua ITS<small>arrecadação · SATs · rádio · energia</small></td>
-              <td class="ct-val">R$ 80k</td>
-              <td class="ct-val" style="color:var(--hint)">R$ 960k</td>
-              <td><span class="ct-tag tag-a">Silo</span></td>
-            </tr>
-            <tr class="ct-total">
-              <td class="ct-name" style="font-weight:600">Total atual</td>
-              <td class="ct-val" style="color:#ff5a5a;font-size:17px">R$ 730k</td>
-              <td class="ct-val" style="color:#ff7070">R$ 8,76M</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <p class="prob-body">Vários fornecedores, várias ordens de serviço, vários pontos de falha. Quando um ativo falha, quem é responsável: o fornecedor do CFTV, da fibra ou da rede? Coordenar essa resposta tem um custo invisível mas real.</p>
       </div>
       <div class="prob-cards">
         <div class="pcard">
           <div class="pcard-t">Fragmentação de responsabilidades</div>
-          <div class="pcard-b">Em caso de falha em câmera, a causa pode estar na óptica, no switch, na fibra ou no software. Com 3 contratos distintos, o MTTR sobe enquanto os fornecedores se coordenam.</div>
+          <div class="pcard-b">Ativo cai — ninguém assume. Com 3 contratos distintos, o MTTR sobe enquanto os fornecedores se coordenam.</div>
         </div>
         <div class="pcard">
           <div class="pcard-t">Dados retidos com fornecedores</div>
-          <div class="pcard-b">Históricos de falha e MTTR ficam nos sistemas internos de cada prestador. A Ecovias não tem visão holística dos ativos, tornando a análise preditiva impossível.</div>
+          <div class="pcard-b">Histórico de falhas e MTTR ficam nos sistemas de cada prestador. A Ecovias não tem visão holística do parque.</div>
         </div>
         <div class="pcard warn">
           <div class="pcard-t">Risco regulatório ANTT</div>
-          <div class="pcard-b">Falhas prolongadas em CFTV e DAI podem resultar em penalidades e notas negativas nos indicadores contratuais. Continuidade tecnológica é obrigação de concessão.</div>
+          <div class="pcard-b">Falhas prolongadas em ativos ITS geram penalidades contratuais. Continuidade é obrigação de concessão.</div>
         </div>
         <div class="pcard warn">
           <div class="pcard-t">Inovação travada</div>
-          <div class="pcard-b">Cada evolução tecnológica (IA, IoT, 5G) exige renegociação com múltiplos fornecedores, tornando o ciclo de inovação lento e o débito técnico inevitável.</div>
+          <div class="pcard-b">Cada evolução (IA, IoT, 5G) exige renegociação com múltiplos fornecedores. O ciclo de inovação não anda.</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="slide-num">02 / 08</div>
+  <div class="slide-num">02 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -663,18 +747,18 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="inner pt">
     <div class="stag"><span>02</span> A solução</div>
     <h2 class="opp-head">O mercado já sabe para onde está indo.<br>A AIVX também.</h2>
-    <p class="opp-sub">A "quarta onda" de concessões está consolidando contratos fragmentados em modelos de Infrastructure Managed Services: fornecedor único, SLA de disponibilidade, responsabilidade integral do campo ao CCO.</p>
+    <p class="opp-sub">Contratos fragmentados estão sendo consolidados em modelos de gestão integrada: um fornecedor, um SLA, responsabilidade integral do campo ao CCO.</p>
     <div class="opp-cards">
       <div class="ocard">
         <div class="ocard-ico">📡</div>
         <h4>Disponibilidade como obrigação</h4>
-        <p>Remunerado pela % de tempo em que câmeras, DAI, SAT e fibra permanecem operacionais. Incentivos alinhados com a concessão.</p>
+        <p>Remunerado pela % de tempo em que ativos, DAI, SAT e fibra permanecem operacionais. Incentivos alinhados com a concessão.</p>
       </div>
       <div class="ocard feat">
         <div class="feat-badge">Proposta AIVX</div>
         <div class="ocard-ico">🔗</div>
         <h4>Ponto único de responsabilidade</h4>
-        <p>Um contrato, uma equipe, uma linha de escalonamento. Fibra + câmeras + ITS geridos por quem conhece o ativo integralmente.</p>
+        <p>Um contrato, uma equipe, uma linha de escalonamento. Fibra + ativos ITS geridos por quem conhece o parque integralmente.</p>
       </div>
       <div class="ocard">
         <div class="ocard-ico">🧠</div>
@@ -687,30 +771,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
       <div class="noc-img-overlay"></div>
       <div class="noc-img-label">NOC · Monitoramento em tempo real · Ecovias Araguaia</div>
     </div>
-    <div class="pillars">
-      <div class="pillar">
-        <div class="pillar-n">PILAR 01</div>
-        <h5>Gestão Unificada</h5>
-        <p>Fibra, câmeras, rádio, energia e ITS sob uma única estrutura contratual e operacional.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-n">PILAR 02</div>
-        <h5>NOC Proativo</h5>
-        <p>Supervisão contínua da saúde de rede, alertas preventivos antes da falha impactar o CCO.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-n">PILAR 03</div>
-        <h5>Equipe Multidisciplinar</h5>
-        <p>Técnicos em eletrônica, fibra, automação e TI de campo baseados nas unidades do trecho.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-n">PILAR 04</div>
-        <h5>Inteligência de Dados</h5>
-        <p>Relatórios mensais de disponibilidade, KPIs por ativo e tech roadmap alinhado ao ASTM.</p>
-      </div>
-    </div>
   </div>
-  <div class="slide-num">03 / 08</div>
+  <div class="slide-num">03 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -720,62 +782,45 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="glow-v" style="width:400px;height:350px;bottom:-100px;right:0;opacity:.4;"></div>
   <div class="inner pt">
     <div class="stag"><span>03</span> Inovação aplicada</div>
-    <h2 class="innov-head">Seu parque de R$ 50M pode ser<br>muito mais inteligente.</h2>
-    <p class="innov-sub">A Ecovias Imigrantes já testa IA cognitiva para detecção autônoma de incidentes. A Araguaia tem a infraestrutura pronta. Falta a camada de inteligência operacional.</p>
+    <h2 class="innov-head">Não apenas mantemos.<br><span style="color:var(--teal)">Evoluímos.</span></h2>
+    <p class="innov-sub">Nossa equipe tem expertise técnico para propor e executar melhorias tecnológicas. Além de corrigir falhas, entregamos um parque ITS mais inteligente a cada ciclo contratual.</p>
 
-    <div class="innov-grid">
-      <div class="irow header">
-        <div>Tecnologia</div>
-        <div>Aplicação na Araguaia</div>
-        <div>Impacto</div>
-        <div>Fase</div>
+    <div class="innov-cards">
+      <div class="icard">
+        <div class="icard-ico">🧠</div>
+        <h4>IA para Detecção de Incidentes</h4>
+        <p>Detecção autônoma no CCO. Segundos, não minutos.</p>
       </div>
-      <div class="irow">
-        <div class="icell"><div class="itech">IA Cognitiva: DAI Autônomo</div><div class="idesc">Algoritmos integrados às 533 câmeras PTZ</div></div>
-        <div class="icell iapp">Reduz resposta do CCO de minutos para segundos. Elimina fadiga de alertas dos operadores via filtragem inteligente.</div>
-        <div class="icell"><span class="ibadge ib-hi">Alto impacto</span></div>
-        <div class="icell"><span class="iphase">Fase intermediária</span></div>
+      <div class="icard">
+        <div class="icard-ico">📡</div>
+        <h4>IoT Preditivo em Campo</h4>
+        <p>Sensores em gabinetes críticos. Corretivas viram preventivas.</p>
       </div>
-      <div class="irow">
-        <div class="icell"><div class="itech">IoT Preditivo em Campo</div><div class="idesc">Sensores de temperatura e energia em gabinetes críticos</div></div>
-        <div class="icell iapp">Previne falhas em cascata antes da próxima visita programada. Substitui corretivas de emergência por intervenções planejadas.</div>
-        <div class="icell"><span class="ibadge ib-hi">Alto impacto</span></div>
-        <div class="icell"><span class="iphase">Fase intermediária</span></div>
+      <div class="icard">
+        <div class="icard-ico">📊</div>
+        <h4>Dashboard Unificado</h4>
+        <p>Cada ativo, km e falha visível em tempo real.</p>
       </div>
-      <div class="irow">
-        <div class="icell"><div class="itech">Dashboard Executivo Unificado</div><div class="idesc">Disponibilidade por ativo, km e sistema em tempo real</div></div>
-        <div class="icell iapp">Visibilidade instantânea para gestão e diretoria. Entrada de dados para decisões sobre reforço de equipe ou substituição de equipamentos.</div>
-        <div class="icell"><span class="ibadge ib-me">Governança</span></div>
-        <div class="icell"><span class="iphase">Fase inicial</span></div>
-      </div>
-      <div class="irow">
-        <div class="icell"><div class="itech">Manutenção por Condição</div><div class="idesc">Abandono do calendário fixo para intervenção baseada em estado real</div></div>
-        <div class="icell iapp">Reduz visitas desnecessárias e concentra recursos onde realmente importa. Alinhado ao modelo E-MANTIS do Grupo ASTM Digital.</div>
-        <div class="icell"><span class="ibadge ib-hi">Alto impacto</span></div>
-        <div class="icell"><span class="iphase">Fase avançada</span></div>
-      </div>
-      <div class="irow">
-        <div class="icell"><div class="itech">Integração HS-WIM + CFTV</div><div class="idesc">Cruzamento câmera HD com pesagem em movimento</div></div>
-        <div class="icell iapp">Identifica evasão de pesagem e excesso de carga recorrente. Proteção direta do ativo mais caro da concessão: o pavimento.</div>
-        <div class="icell"><span class="ibadge ib-me">Estratégico</span></div>
-        <div class="icell"><span class="iphase">Fase avançada</span></div>
+      <div class="icard">
+        <div class="icard-ico">⚙️</div>
+        <h4>Manutenção por Condição</h4>
+        <p>Intervenção baseada em estado real, não em calendário.</p>
       </div>
     </div>
 
     <div class="tr-ref">
       <div>
-        <div class="tr-ref-label">Referência de mercado · TR ECO-DAM 1000/26</div>
-        <p>Termo de Referência Ecovias Rotas das Gerais (734,9 km, abril/2026), padrão Ecorodovias mais recente para manutenção contínua integrada por administração.</p>
+        <div class="tr-ref-label">Estrutura AIVX para a Araguaia</div>
+        <p>Dimensionamento planejado para 851 km com gestão integrada de ativos ITS: fibra, CFTV, SATs, rádio, energia e arrecadação em contrato único.</p>
       </div>
       <div class="tr-stats">
-        <div><div class="tr-stat-n">44</div><div class="tr-stat-l">profissionais mín.</div></div>
-        <div><div class="tr-stat-n">23</div><div class="tr-stat-l">viaturas</div></div>
-        <div><div class="tr-stat-n">3 anos</div><div class="tr-stat-l">vigência</div></div>
-        <div><div class="tr-stat-n">45d</div><div class="tr-stat-l">pagamento</div></div>
+        <div><div class="tr-stat-n">56</div><div class="tr-stat-l">profissionais</div></div>
+        <div><div class="tr-stat-n">27</div><div class="tr-stat-l">viaturas</div></div>
+        <div><div class="tr-stat-n">5 anos</div><div class="tr-stat-l">vigência</div></div>
       </div>
     </div>
   </div>
-  <div class="slide-num">04 / 08</div>
+  <div class="slide-num">04 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -786,45 +831,44 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="inner pt">
     <div class="stag"><span>04</span> Comparativo financeiro</div>
     <h2 class="fin-head">O que a Ecovias ganha<br>com a consolidação.</h2>
-    <p class="fin-sub">O valor integrado pode ser equivalente ao que você já gasta. A diferença não está no preço, está no que esse preço entrega: centralização, inteligência e zero fragmentação.</p>
 
     <div class="fin-cols">
       <div class="fcol curr">
-        <div class="fcol-top"><div class="fdot r"></div> Modelo atual · fragmentado</div>
-        <div class="fnum r">R$ 730k</div>
-        <div class="fperiod">por mês · 3 contratos distintos</div>
+        <div class="fcol-top"><div class="fdot r"></div> Contratos AIVX mapeados · fragmentado</div>
+        <div class="fnum r">R$ 800k</div>
+        <div class="fperiod">por mês · somente contratos já mapeados pela AIVX</div>
         <div class="flines">
-          <div class="fline"><span>Manutenção CFTV</span><span class="fline-v">R$ 450.000</span></div>
-          <div class="fline"><span>Manutenção Fibra</span><span class="fline-v">R$ 200.000</span></div>
-          <div class="fline"><span>Manutenção Contínua ITS</span><span class="fline-v">R$ 80.000</span></div>
-          <div class="fline"><span>Custo oculto: coordenação, retrabalho, MTTR *</span><span class="fline-v r">não contabilizado</span></div>
+          <div class="fline"><span>Manutenção ativos CFTV</span><span class="fline-v r">contrato A</span></div>
+          <div class="fline"><span>Manutenção Fibra 851 km</span><span class="fline-v r">contrato B</span></div>
+          <div class="fline"><span>Manutenção Contínua ITS</span><span class="fline-v r">contrato C</span></div>
+          <div class="fline"><span>Gestão própria + outros fornecedores</span><span class="fline-v r">não contabilizado</span></div>
         </div>
-        <div class="fnote danger">* Custos de coordenação administrativa, retrabalho diagnóstico e mobilizações extras tipicamente não aparecem nas faturas, mas impactam diretamente a operação.</div>
+        <div class="fnote danger">Este valor não inclui gestão interna, retrabalho, coordenação e demais fornecedores. O custo real é significativamente maior.</div>
       </div>
       <div class="fcol prop">
-        <div class="fcol-top"><div class="fdot g"></div> Proposta AIVX · modelo integrado</div>
-        <div class="fnum g">A apresentar</div>
-        <div class="fperiod">por mês · contrato único · 36 meses</div>
+        <div class="fcol-top"><div class="fdot g"></div> Proposta AIVX · gestão integrada</div>
+        <div class="fnum g">R$ 1,5M</div>
+        <div class="fperiod">por mês · contrato único · operação + gestão completa</div>
         <div class="flines">
-          <div class="fline"><span>Manutenção integrada CFTV + Fibra</span><span class="fline-v accent">—</span></div>
-          <div class="fline"><span>Manutenção contínua ITS</span><span class="fline-v accent">—</span></div>
-          <div class="fline"><span>NOC proativo + dashboards</span><span class="fline-v g">incluso</span></div>
-          <div class="fline"><span>Camada IoT / IA (fases 1–3)</span><span class="fline-v g">incluso</span></div>
-          <div class="fline"><span>Custo oculto de coordenação</span><span class="fline-v g">R$ 0</span></div>
+          <div class="fline"><span>Operação integrada ativos + Fibra + ITS</span><span class="fline-v accent">R$ 1,5M/mês</span></div>
+          <div class="fline"><span>Gestão completa com NOC proativo</span><span class="fline-v g">incluso</span></div>
+          <div class="fline"><span>Dashboards e relatórios ANTT</span><span class="fline-v g">incluso</span></div>
+          <div class="fline"><span>Inovação IoT e IA (fases 1 a 3)</span><span class="fline-v g">incluso</span></div>
+          <div class="fline"><span>Custo de coordenação e retrabalho</span><span class="fline-v g">R$ 0</span></div>
         </div>
-        <div class="fnote success">O valor pode ser equivalente ou superior ao atual. A diferença está no que ele entrega: um único ponto de responsabilidade, visibilidade total dos ativos, tecnologias de IA e IoT inclusas e zero retrabalho de coordenação.</div>
+        <div class="fnote success">Um contrato. Um ponto de responsabilidade. Operação, gestão, inovação e dados 100% nas mãos da Ecovias.</div>
       </div>
     </div>
 
     <div class="savings-row">
       <div class="sav-num">1 contrato</div>
       <div class="sav-text">
-        <h4>O mesmo investimento. Um resultado completamente diferente.</h4>
-        <p>A proposta AIVX pode equivaler ou até superar o custo atual, e vale cada centavo. Você troca três fornecedores fragmentados por <strong>um único parceiro responsável</strong>: menos dor de cabeça, mais previsibilidade, inovação tecnológica inclusa e dados do seu ativo 100% em suas mãos.</p>
+        <h4>Só a AIVX entrega tudo isso em contrato único.</h4>
+        <p>Você troca contratos fragmentados por <strong>um único parceiro responsável</strong>: menos retrabalho, mais previsibilidade, inovação tecnológica inclusa e dados do seu ativo 100% em suas mãos.</p>
       </div>
     </div>
   </div>
-  <div class="slide-num">05 / 08</div>
+  <div class="slide-num">05 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -834,90 +878,154 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="glow-t" style="width:500px;height:350px;bottom:-100px;right:-50px;opacity:.5;"></div>
   <div class="inner pt">
     <div class="stag"><span>05</span> Roadmap</div>
-    <h2 class="rm-head">Transição sem interrupção.<br>Evolução contínua.</h2>
-    <p class="rm-sub">Migração faseada que garante continuidade operacional, absorção da equipe e evolução tecnológica progressiva.</p>
+    <h2 class="rm-head">Transição sem interrupção.<br><span style="color:var(--teal)">Evolução contínua.</span></h2>
 
-    <div class="phases">
-      <div class="phase active">
-        <div class="ph-tag">Fase 1</div>
-        <div class="ph-period">Fase inicial</div>
-        <h5>Estabilização e visibilidade</h5>
-        <ul>
-          <li>Auditoria técnica do parque CFTV e fibra</li>
-          <li>NOC de saúde de rede operacional</li>
-          <li>Dashboard executivo unificado</li>
-          <li>Baseline de disponibilidade por ativo</li>
-          <li>Aproveitamento preferencial dos profissionais já alocados</li>
-        </ul>
+    <div class="rm-rows">
+      <div class="rm-row v1">
+        <div class="rm-accent"></div>
+        <div class="rm-num">01</div>
+        <div class="rm-info">
+          <span class="rm-name">Estabilização</span>
+          <div class="rm-chips">
+            <span>Auditoria técnica do parque</span>
+            <span>NOC operacional</span>
+            <span>Dashboard executivo</span>
+            <span>Baseline de disponibilidade</span>
+          </div>
+        </div>
+        <div class="rm-when">Meses 1–3</div>
       </div>
-      <div class="phase">
-        <div class="ph-tag">Fase 2</div>
-        <div class="ph-period">Fase intermediária</div>
-        <h5>Integração e automação</h5>
-        <ul>
-          <li>IA cognitiva no CCO para detecção de incidentes</li>
-          <li>Telemetria IoT em gabinetes críticos</li>
-          <li>Integração total com CMMS da Ecovias</li>
-          <li>Plano preditivo baseado nos pontos críticos identificados na auditoria</li>
-        </ul>
+      <div class="rm-row v2">
+        <div class="rm-accent"></div>
+        <div class="rm-num">02</div>
+        <div class="rm-info">
+          <span class="rm-name">Integração e automação</span>
+          <div class="rm-chips">
+            <span>IA cognitiva no CCO</span>
+            <span>IoT preditivo</span>
+            <span>Integração CMMS Ecovias</span>
+          </div>
+        </div>
+        <div class="rm-when">Meses 4–8</div>
       </div>
-      <div class="phase">
-        <div class="ph-tag">Fase 3</div>
-        <div class="ph-period">Fase avançada</div>
-        <h5>Gestão por condição</h5>
-        <ul>
-          <li>Manutenção preditiva orientada por dados</li>
-          <li>Integração CFTV + HS-WIM</li>
-          <li>Relatório de saúde de ativos para ANTT</li>
-          <li>Análise de padrões de evasão de pesagem</li>
-        </ul>
+      <div class="rm-row v3">
+        <div class="rm-accent"></div>
+        <div class="rm-num">03</div>
+        <div class="rm-info">
+          <span class="rm-name">Gestão por condição</span>
+          <div class="rm-chips">
+            <span>Manutenção preditiva</span>
+            <span>CFTV + HS-WIM</span>
+            <span>Relatório ANTT</span>
+          </div>
+        </div>
+        <div class="rm-when">Meses 9–18</div>
       </div>
-      <div class="phase">
-        <div class="ph-tag">Fase 4</div>
-        <div class="ph-period">Evolução contínua</div>
-        <h5>Inovação contínua</h5>
-        <ul>
-          <li>Piloto V2X e conectividade 5G</li>
-          <li>IA generativa para padrões de tráfego</li>
-          <li>Gêmeo digital da rodovia</li>
-          <li>Alinhamento com ASTM Digital / E-MANTIS</li>
-        </ul>
+      <div class="rm-row v4">
+        <div class="rm-accent"></div>
+        <div class="rm-num">04</div>
+        <div class="rm-info">
+          <span class="rm-name">Inovação contínua</span>
+          <div class="rm-chips">
+            <span>V2X / 5G</span>
+            <span>IA generativa</span>
+            <span>Gêmeo digital</span>
+          </div>
+        </div>
+        <div class="rm-when">Ano 2+</div>
       </div>
     </div>
 
-    <div class="risk-grid">
-      <div class="rcard">
-        <div class="rcard-ico">⚡</div>
-        <h6>Continuidade na migração</h6>
-        <p>Plano de transição estruturado para garantir cobertura contínua durante toda a migração, sem interrupção dos serviços ativos.</p>
-      </div>
-      <div class="rcard">
-        <div class="rcard-ico">👥</div>
-        <h6>Aproveitamento de equipe</h6>
-        <p>Aproveitamento preferencial dos profissionais com conhecimento dos ativos da Araguaia, conforme viabilidade operacional.</p>
-      </div>
-      <div class="rcard">
-        <div class="rcard-ico">📋</div>
-        <h6>Compliance ANTT</h6>
-        <p>Relatórios de disponibilidade no formato exigido pela ANTT com rastreabilidade de cada intervenção por ativo.</p>
-      </div>
-      <div class="rcard">
-        <div class="rcard-ico">🔐</div>
-        <h6>Segurança da informação</h6>
-        <p>Toda infraestrutura de dados permanece no ambiente Ecovias. Cláusulas de confidencialidade padrão Grupo.</p>
-      </div>
+    <div class="rm-commits">
+      <div class="rmcmt"><span class="rmcmt-ico">⚡</span>Migração sem interrupção operacional</div>
+      <div class="rmcmt"><span class="rmcmt-ico">👥</span>Aproveitamento preferencial da equipe atual</div>
+      <div class="rmcmt"><span class="rmcmt-ico">📋</span>Compliance ANTT desde o dia 1</div>
+      <div class="rmcmt"><span class="rmcmt-ico">🔐</span>Dados permanecem no ambiente Ecovias</div>
     </div>
   </div>
-  <div class="slide-num">06 / 08</div>
+  <div class="slide-num">06 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
-     SLIDE 6 · PRÓXIMOS PASSOS
+     SLIDE 6 · COBERTURA / MAPA
+══════════════════════════════════════════════════ -->
+<div class="slide" id="smap" style="position:relative;overflow:hidden;padding:0;">
+  <!-- Leaflet map fills entire slide -->
+  <div id="map-leaflet" style="position:absolute;inset:0;z-index:1;"></div>
+
+  <!-- Center-left overlay panel -->
+  <div class="map-overlay" style="position:absolute;left:8rem;top:50%;transform:translateY(-50%);
+    width:340px;z-index:10;
+    background:rgba(8,8,16,.88);border:1px solid rgba(116,96,255,.2);border-radius:8px;
+    backdrop-filter:blur(12px);
+    padding:2rem 2rem 1.75rem;display:flex;flex-direction:column;gap:.5rem;">
+
+    <div class="stag" style="margin-bottom:1.5rem;"><span>06</span> Cobertura operacional</div>
+    <h2 style="font-size:2rem;font-weight:700;line-height:1.1;margin-bottom:.75rem;">
+      4 bases.<br><span style="color:var(--teal)">851 km cobertos.</span>
+    </h2>
+    <p style="font-size:.9rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem;">
+      Equipes posicionadas estrategicamente para tempo de resposta mínimo em qualquer ponto do trecho.
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:.5rem;">
+      <div class="mbase" id="mb-gurupi">
+        <div class="mbase-dot to"></div>
+        <div>
+          <div class="mbase-city">Gurupi · TO</div>
+          <div class="mbase-role">Base Norte</div>
+        </div>
+      </div>
+      <div class="mbase" id="mb-porangatu">
+        <div class="mbase-dot green"></div>
+        <div>
+          <div class="mbase-city">Porangatu · GO</div>
+          <div class="mbase-role">Base Centro-Norte</div>
+        </div>
+      </div>
+      <div class="mbase" id="mb-uruacu">
+        <div class="mbase-dot gold"></div>
+        <div>
+          <div class="mbase-city">Uruaçu · GO</div>
+          <div class="mbase-role">Base Centro-Sul</div>
+        </div>
+      </div>
+      <div class="mbase" id="mb-anapolis">
+        <div class="mbase-dot go"></div>
+        <div>
+          <div class="mbase-city">Anápolis · GO</div>
+          <div class="mbase-role">Base Sul · âncora logística</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border-w);
+      display:flex;gap:2rem;">
+      <div>
+        <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--teal);">56</div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);">profissionais</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--teal);">27</div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);">viaturas</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--teal);">5 anos</div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);">vigência</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num" style="z-index:20;">07 / 09</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 7 · PRÓXIMOS PASSOS (antes: SLIDE 6)
 ══════════════════════════════════════════════════ -->
 <div class="slide" id="s6">
   <div class="glow-v" style="width:400px;height:400px;top:-80px;right:-80px;opacity:.4;"></div>
   <div class="inner pt">
-    <div class="stag"><span>06</span> Próximos passos</div>
+    <div class="stag"><span>07</span> Próximos passos</div>
     <h2 style="font-size:2rem;font-weight:700;line-height:1.1;max-width:540px;margin-bottom:.75rem;">Um processo colaborativo,<br>no seu ritmo.</h2>
     <p style="font-size:.95rem;color:var(--muted);max-width:540px;line-height:1.75;margin-bottom:1.5rem;">Cada etapa avança no ritmo da Ecovias.</p>
     <div class="steps-wrap">
@@ -951,7 +1059,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
       </div>
     </div>
   </div>
-  <div class="slide-num">07 / 08</div>
+  <div class="slide-num">08 / 09</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
@@ -960,7 +1068,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 <div class="slide" id="s7">
   <div class="glow-v" style="width:800px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);opacity:.15;"></div>
   <div class="glow-t" style="width:400px;height:300px;top:-50px;right:-50px;opacity:.3;"></div>
-  <div class="inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+  <div class="inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;padding-top:72px;">
     <div class="close-sub">AIVX Tecnologia · Infraestrutura Inteligente</div>
     <h2 class="close-h">
       Proteja o investimento.<br>
@@ -972,7 +1080,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
     </div>
   </div>
   
-  <div class="slide-num">08 / 08</div>
+  <div class="slide-num">09 / 09</div>
 
 
 <script>
@@ -983,6 +1091,7 @@ const SLIDES = [
   {id:'s3',label:'Inovação'},
   {id:'s4',label:'Financeiro'},
   {id:'s5',label:'Roadmap'},
+  {id:'smap',label:'Cobertura'},
   {id:'s6',label:'Próximos Passos'},
   {id:'s7',label:'Fechamento'},
 ];
@@ -1042,6 +1151,227 @@ document.addEventListener('keydown', e => {
 });
 
 updateState();
+
+/* ── Ctrl+scroll: permite zoom do browser mas suspende scroll-snap
+   para evitar navegar de slide. O índice do slide atual é capturado
+   ANTES do zoom alterar qualquer dimensão, garantindo o retorno correto. ── */
+window.addEventListener('wheel', e => {
+  if (!e.ctrlKey) return;
+
+  /* Captura o slide visível agora, enquanto as dimensões ainda são as originais */
+  if (window._zoomSavedIndex === undefined) {
+    window._zoomSavedIndex = 0;
+    SLIDES.forEach((s, i) => {
+      const el = document.getElementById(s.id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top;
+      if (top >= -window.innerHeight * 0.5 && top < window.innerHeight * 0.5)
+        window._zoomSavedIndex = i;
+    });
+  }
+
+  document.documentElement.style.scrollSnapType = 'none';
+  clearTimeout(window._zoomSnapTimer);
+  window._zoomSnapTimer = setTimeout(() => {
+    document.documentElement.style.scrollSnapType = '';
+    const el = document.getElementById(SLIDES[window._zoomSavedIndex].id);
+    if (el) el.scrollIntoView({behavior: 'instant'});
+    window._zoomSavedIndex = undefined; /* libera para próxima sessão de zoom */
+  }, 400);
+}, {passive: true});
+
+/* ── Deck scaling: shrink .inner proportionally on smaller viewports ──
+   Usa devicePixelRatio para compensar zoom do browser: se o usuário
+   deu zoom em 150%, innerHeight cai mas DPR sobe — o produto é estável.
+   Assim --deck-s só muda com resolução real, não com zoom do browser. ── */
+const _initDPR = window.devicePixelRatio || 1;
+function applyDeckScale() {
+  const dprCompensation = (window.devicePixelRatio || 1) / _initDPR;
+  const effectiveH = Math.round(window.innerHeight * dprCompensation);
+  const s = Math.min(effectiveH / 700, 1);
+  document.documentElement.style.setProperty('--deck-s', s.toFixed(4));
+}
+applyDeckScale();
+
+/* ── Zoom / resize fix: re-snap to current slide when window resizes ── */
+let _resizeTimer;
+window.addEventListener('resize', () => {
+  applyDeckScale();
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    let cur = 0;
+    SLIDES.forEach((s,i) => {
+      const el = document.getElementById(s.id);
+      if(!el) return;
+      const top = el.getBoundingClientRect().top;
+      if(top >= -window.innerHeight * 0.5 && top < window.innerHeight * 0.5) cur = i;
+    });
+    const el = document.getElementById(SLIDES[cur].id);
+    if(el) el.scrollIntoView({behavior:'instant'});
+    if(window._leafletMap) window._leafletMap.invalidateSize();
+  }, 120);
+});
+
+/* ── Leaflet map init ── */
+(function initMap(){
+  if(typeof L === 'undefined') return;
+
+  const map = L.map('map-leaflet', {
+    zoomControl: true,
+    scrollWheelZoom: true,
+    doubleClickZoom: true,
+    dragging: true,
+    attributionControl: false,
+  }).setView([-14.2, -49.05], 7);
+
+  /* Stop wheel events from bubbling to the page scroll when over the map */
+  document.getElementById('map-leaflet').addEventListener('wheel', e => {
+    e.stopPropagation();
+  }, {passive: false});
+
+  window._leafletMap = map;
+
+  /* Dark CartoDB tiles */
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 18,
+  }).addTo(map);
+
+  /* Custom icon factory */
+  function icon(color, shadow){
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:18px;height:18px;border-radius:50%;
+        background:${color};
+        box-shadow:0 0 14px ${shadow || color},0 0 4px rgba(0,0,0,.6);
+        border:2.5px solid rgba(255,255,255,.85);
+        cursor:pointer;
+      "></div>`,
+      iconSize:[18,18],iconAnchor:[9,9],popupAnchor:[0,-12],
+    });
+  }
+
+  /* Popup style override */
+  const popStyle = `
+    background:rgba(8,8,16,.95);
+    border:1px solid rgba(116,96,255,.35);
+    border-radius:4px;
+    color:#e8e6f0;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px;
+    padding:10px 14px;
+    box-shadow:0 8px 32px rgba(0,0,0,.5);
+    min-width:180px;
+  `;
+
+  /* Bases data — cor única por base */
+  const bases = [
+    {
+      id:'gurupi',
+      lat:-11.729,lng:-49.067,
+      color:'#74d5d0',
+      name:'Gurupi · TO',
+      role:'Base Norte',
+      info:'Cobertura do extremo norte da concessão até Aliança do Tocantins.',
+      panel:'mb-gurupi',
+    },
+    {
+      id:'porangatu',
+      lat:-13.439,lng:-49.149,
+      color:'#67ff8e',
+      name:'Porangatu · GO',
+      role:'Base Centro-Norte',
+      info:'Cobertura da região centro-norte e divisa GO/TO da BR-153.',
+      panel:'mb-porangatu',
+    },
+    {
+      id:'uruacu',
+      lat:-14.524,lng:-49.144,
+      color:'#ffd060',
+      name:'Uruaçu · GO',
+      role:'Base Centro-Sul',
+      info:'Trecho central da BR-153 em Goiás, maior densidade de ativos.',
+      panel:'mb-uruacu',
+    },
+    {
+      id:'anapolis',
+      lat:-16.328,lng:-48.953,
+      color:'#7460ff',
+      name:'Anápolis · GO',
+      role:'Base Sul · âncora logística',
+      info:'Base principal de logística e suporte técnico especializado.',
+      panel:'mb-anapolis',
+    },
+  ];
+
+  const markers = {};
+
+  bases.forEach(b => {
+    const m = L.marker([b.lat, b.lng], {icon: icon(b.color)})
+      .addTo(map)
+      .bindPopup(`
+        <div style="${popStyle}">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;color:${b.color}">${b.name}</div>
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,230,240,.5);margin-bottom:8px;">${b.role}</div>
+          <div style="font-size:12px;color:rgba(232,230,240,.7);line-height:1.55;">${b.info}</div>
+        </div>
+      `, {
+        closeButton: false,
+        className: 'aivx-popup',
+        maxWidth: 220,
+      });
+
+    markers[b.id] = m;
+
+    /* Sync sidebar hover with map */
+    const panel = document.getElementById(b.panel);
+    if(panel){
+      panel.addEventListener('mouseenter', () => m.openPopup());
+      panel.addEventListener('mouseleave', () => m.closePopup());
+    }
+  });
+
+  /* BR-153 / 414 / 080 route polyline — approximate coords */
+  const route = [
+    [-11.30,-49.17], /* Aliança do Tocantins (ponta norte) */
+    [-11.73,-49.07], /* Gurupi */
+    [-12.10,-49.12],
+    [-12.54,-49.22],
+    [-13.00,-49.18],
+    [-13.44,-49.15], /* Porangatu */
+    [-13.78,-49.12],
+    [-14.05,-49.12],
+    [-14.52,-49.14], /* Uruaçu */
+    [-14.93,-49.18],
+    [-15.32,-49.20],
+    [-15.92,-49.12],
+    [-16.33,-48.95], /* Anápolis */
+  ];
+
+  L.polyline(route, {
+    color:'#7460ff',
+    weight:4,
+    opacity:.7,
+    smoothFactor:1,
+  }).addTo(map);
+
+  /* Braço BR-414/080: Anápolis → Abadiânia → Corumbá → Cocalzinho → Barro Alto → Uruaçu */
+  const br414 = [
+    [-16.328,-48.953], /* Anápolis */
+    [-16.196,-48.707], /* Abadiânia */
+    [-15.920,-48.793], /* Corumbá de Goiás */
+    [-15.799,-48.778], /* Cocalzinho de Goiás */
+    [-14.978,-48.916], /* Barro Alto */
+    [-14.524,-49.144], /* Uruaçu */
+  ];
+  L.polyline(br414, {color:'#ffd060',weight:3,opacity:.65,smoothFactor:1}).addTo(map);
+
+
+  /* Zoom controls style */
+  document.querySelector('.leaflet-control-zoom')?.setAttribute('style',
+    'border:1px solid rgba(116,96,255,.3)!important;border-radius:4px!important;overflow:hidden;');
+
+})();
 </script>
 </body>
 </html>
