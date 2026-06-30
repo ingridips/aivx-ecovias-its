@@ -603,49 +603,102 @@ body{font-size:17px;}
 ::-webkit-scrollbar{display:none;}
 body{-ms-overflow-style:none;scrollbar-width:none;}
 
-/* ─── RESPONSIVE ──────────────────────────────────── */
+/* ─── RESPONSIVE / MOBILE ─────────────────────────── */
 @media(max-width:768px){
+
+  /* ── Desabilita scroll-snap: slides viram blocos de scroll natural ── */
+  html{scroll-snap-type:none !important;scroll-behavior:auto;}
+  body{overflow-y:auto !important;}
+
+  .slide{
+    height:auto !important;
+    min-height:0 !important;
+    scroll-snap-align:none !important;
+    scroll-snap-stop:unset !important;
+    justify-content:flex-start !important;
+    padding:72px 0 2.5rem;        /* clearance do nav no topo */
+    overflow:visible !important;
+  }
+
+  /* Slide do mapa precisa de altura real para o Leaflet */
+  #smap{height:100svh !important;min-height:100svh !important;padding:0 !important;}
+
+  /* ── Inner: remove transform-scale, padding lateral menor ── */
+  .inner{
+    padding:0 1.25rem !important;
+    transform:none !important;
+  }
+  .inner.pt{padding-top:0 !important;}
+
+  /* ── Nav ── */
   nav{padding:0 1.25rem;}
   .nav-center{display:none;}
-  .inner{padding:0 1.5rem;}
-  .inner.pt{padding-top:72px;}
+  .nav-right{display:none;}
+
+  /* ── Ocultar elementos decorativos que conflitam no mobile ── */
+  .slide-num{display:none !important;}
+  #dots{display:none;}
+
+  /* ── Tamanhos de fonte ajustados para telas pequenas ── */
+  body{font-size:15px;}
+  .hero h1{font-size:clamp(1.9rem,7vw,2.8rem) !important;}
+  .kpi-n{font-size:1.8rem;}
+  .prob-hed{font-size:1.8rem;}
+  .opp-head{font-size:1.8rem;}
+  .innov-head{font-size:1.8rem !important;}
+  .fin-head{font-size:1.8rem !important;}
+  .rm-head{font-size:1.8rem !important;}
+  .map-hed{font-size:1.8rem;}
+  .close-h{font-size:1.9rem;}
+  .fnum{font-size:2.2rem !important;}
+  .sav-num{font-size:2rem;}
+  .tr-stat-n{font-size:2rem !important;}
+  .rm-num{font-size:2rem !important;}
+
+  /* ── Grids → coluna única ── */
   .prob-grid{grid-template-columns:1fr;}
   .opp-cards{grid-template-columns:1fr;}
-  
-.noc-img-block{
-  margin:1.5rem 0 0;
-  border-radius:6px;overflow:hidden;
-  border:1px solid var(--border-w);
-  position:relative;
-  height:155px;
-}
-.noc-img-block img{
-  width:100%;height:100%;object-fit:cover;object-position:center 30%;
-  display:block;
-  filter:brightness(.85) saturate(1.1);
-}
-.noc-img-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg, transparent 40%, rgba(8,8,16,.85) 100%);
-  pointer-events:none;
-}
-.noc-img-label{
-  position:absolute;bottom:.9rem;left:1.25rem;
-  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--teal);font-family:var(--mono);
-}
-.pillars{grid-template-columns:1fr 1fr;}
+  .fin-cols{grid-template-columns:1fr;}
+  .steps-wrap{grid-template-columns:1fr;}
   .map-grid{grid-template-columns:1fr;}
   .map-svg-wrap{display:none;}
-  .innov-topics{flex-wrap:wrap;}
-  .itopic{flex:1 1 45%;border-left:none;padding:.5rem 0;}
-  .fin-cols{grid-template-columns:1fr;}
-  .rm-row{grid-template-columns:4px 2rem 1fr auto;gap:1rem;}
-  .rm-num{font-size:2.2rem;}
-  .steps-wrap{grid-template-columns:1fr;}
+  .pillars{grid-template-columns:1fr 1fr;}
+
+  /* ── Flex wraps e espaçamentos ── */
   .hero-kpis{flex-wrap:wrap;gap:1.5rem;}
   .savings-row{flex-direction:column;gap:1rem;}
-  #dots{display:none;}
+  .tr-stats{gap:2rem;flex-wrap:wrap;}
+  .rm-commits{gap:1rem;flex-wrap:wrap;}
+  .innov-topics{flex-wrap:wrap;}
+  .itopic{flex:1 1 45%;border-left:none;padding:.5rem 0;}
+
+  /* ── Roadmap: remove coluna de data em telas muito pequenas ── */
+  .rm-row{grid-template-columns:4px 2rem 1fr;gap:.75rem;}
+  .rm-when{display:none;}
+
+  /* ── Innovation grid: linha de header oculta, células empilhadas ── */
+  .irow{grid-template-columns:1fr;display:flex;flex-direction:column;padding:.5rem 0;}
+  .irow.header{display:none;}
+  .icell{padding:.4rem .5rem;}
+
+  /* ── Mapa overlay: reposiciona abaixo do nav, largura total ── */
+  .map-overlay{
+    left:1rem !important;
+    right:1rem !important;
+    top:72px !important;
+    bottom:auto !important;
+    transform:none !important;
+    width:auto !important;
+    max-width:none !important;
+    max-height:calc(100svh - 80px);
+    overflow-y:auto;
+  }
+
+  /* ── Close meta: posição estática no mobile ── */
+  .close-meta{position:static;flex-direction:column;gap:1rem;padding:1.5rem 0 0;}
+
+  /* ── NOC image menor ── */
+  .noc-img-block{height:120px;}
 }
 </style>
 </head>
@@ -1165,6 +1218,10 @@ window.addEventListener('wheel', e => {
    Assim --deck-s só muda com resolução real, não com zoom do browser. ── */
 const _initDPR = window.devicePixelRatio || 1;
 function applyDeckScale() {
+  if(window.innerWidth <= 768){
+    document.documentElement.style.setProperty('--deck-s','1');
+    return;
+  }
   const dprCompensation = (window.devicePixelRatio || 1) / _initDPR;
   const effectiveH = Math.round(window.innerHeight * dprCompensation);
   const s = Math.min(effectiveH / 700, 1);
@@ -1178,6 +1235,8 @@ window.addEventListener('resize', () => {
   applyDeckScale();
   clearTimeout(_resizeTimer);
   _resizeTimer = setTimeout(() => {
+    if(window._leafletMap) window._leafletMap.invalidateSize();
+    if(window.innerWidth <= 768) return; /* no re-snap on mobile */
     let cur = 0;
     SLIDES.forEach((s,i) => {
       const el = document.getElementById(s.id);
@@ -1187,7 +1246,6 @@ window.addEventListener('resize', () => {
     });
     const el = document.getElementById(SLIDES[cur].id);
     if(el) el.scrollIntoView({behavior:'instant'});
-    if(window._leafletMap) window._leafletMap.invalidateSize();
   }, 120);
 });
 
