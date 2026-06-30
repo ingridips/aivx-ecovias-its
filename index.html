@@ -312,38 +312,37 @@ nav{
   padding:3px 8px;display:inline-block;margin-top:4px;
 }
 
-/* INNOVATION CARDS */
-.innov-cards{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--border-w);border-radius:4px;overflow:hidden;
-  margin-bottom:1.5rem;
-}
-.icard{
-  padding:1.75rem 1.5rem;background:var(--surface);
-  position:relative;transition:background .2s;
-}
-.icard:first-child{background:var(--surface2);border-top:2px solid var(--teal);}
-.icard:hover{background:var(--surface2);}
-.icard-ico{font-size:22px;margin-bottom:1rem;}
-.icard h4{font-size:14px;font-weight:600;margin-bottom:.5rem;line-height:1.3;color:var(--white);}
-.icard p{font-size:12px;color:var(--muted);line-height:1.6;}
-
-/* TR REF BOX */
+/* TR REF BOX — destaque principal do slide */
 .tr-ref{
-  margin-top:1.5rem;
-  padding:1.25rem 1.75rem;
-  border:1px solid var(--border);
-  border-radius:3px;background:var(--surface);
-  display:flex;gap:4rem;align-items:center;flex-wrap:wrap;
+  margin-bottom:1.75rem;
+  padding:2rem 2.25rem;
+  border:1px solid rgba(116,213,208,.3);
+  border-left:3px solid var(--teal);
+  border-radius:4px;
+  background:linear-gradient(135deg, rgba(116,213,208,.07), var(--surface));
+  display:flex;flex-direction:column;gap:1.5rem;
 }
 .tr-ref-label{
-  font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:.5rem;
+  font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--teal);
 }
-.tr-ref p{font-size:12px;color:var(--muted);line-height:1.65;max-width:400px;}
-.tr-stats{display:flex;gap:2.5rem;flex-wrap:wrap;}
-.tr-stat-n{font-family:var(--mono);font-size:1.25rem;font-weight:600;color:var(--teal);}
-.tr-stat-l{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);}
+.tr-stats{display:flex;gap:4.5rem;flex-wrap:wrap;}
+.tr-stat-n{font-family:var(--mono);font-size:2.8rem;font-weight:700;color:var(--teal);line-height:1;}
+.tr-stat-l{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);margin-top:.4rem;}
+
+/* INNOVATION TOPICS — linha compacta de tópicos no rodapé */
+.innov-topics{
+  display:flex;gap:0;
+  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:1.1rem;
+}
+.itopic{
+  flex:1;display:flex;align-items:center;gap:.65rem;padding:0 1.25rem;
+  border-left:1px solid rgba(255,255,255,.06);
+}
+.itopic:first-child{border-left:none;padding-left:0;}
+.itopic-ico{font-size:17px;flex-shrink:0;}
+.itopic-t{font-size:.82rem;font-weight:600;color:rgba(232,230,240,.8);line-height:1.3;}
 
 /* ─────────────────────────────────────────────────── */
 /*  SLIDE 4 — FINANCEIRO                               */
@@ -580,8 +579,7 @@ body{font-size:17px;}
 .pillar p{font-size:12px;}
 .innov-head{font-size:2.2rem;}
 .innov-sub{font-size:1rem;}
-.icard h4{font-size:15px;}
-.icard p{font-size:13px;}
+.itopic-t{font-size:.88rem;}
 .fin-head{font-size:2.2rem;}
 .fin-sub{font-size:1rem;}
 .fnum{font-size:2.8rem;}
@@ -600,8 +598,6 @@ body{font-size:17px;}
 .close-p{font-size:1.1rem;}
 .sav-text h4{font-size:16px;}
 .sav-text p{font-size:13px;}
-.tr-ref p{font-size:13px;}
-.tr-stat-n{font-size:1.4rem;}
 
 /* ─── SCROLLBAR ───────────────────────────────────── */
 ::-webkit-scrollbar{display:none;}
@@ -641,7 +637,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .pillars{grid-template-columns:1fr 1fr;}
   .map-grid{grid-template-columns:1fr;}
   .map-svg-wrap{display:none;}
-  .innov-cards{grid-template-columns:1fr 1fr;}
+  .innov-topics{flex-wrap:wrap;}
+  .itopic{flex:1 1 45%;border-left:none;padding:.5rem 0;}
   .fin-cols{grid-template-columns:1fr;}
   .rm-row{grid-template-columns:4px 2rem 1fr auto;gap:1rem;}
   .rm-num{font-size:2.2rem;}
@@ -783,41 +780,23 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="inner pt">
     <div class="stag"><span>03</span> Inovação aplicada</div>
     <h2 class="innov-head">Não apenas mantemos.<br><span style="color:var(--teal)">Evoluímos.</span></h2>
-    <p class="innov-sub">Nossa equipe tem expertise técnico para propor e executar melhorias tecnológicas. Além de corrigir falhas, entregamos um parque ITS mais inteligente a cada ciclo contratual.</p>
-
-    <div class="innov-cards">
-      <div class="icard">
-        <div class="icard-ico">🧠</div>
-        <h4>IA para Detecção de Incidentes</h4>
-        <p>Detecção autônoma no CCO. Segundos, não minutos.</p>
-      </div>
-      <div class="icard">
-        <div class="icard-ico">📡</div>
-        <h4>IoT Preditivo em Campo</h4>
-        <p>Sensores em gabinetes críticos. Corretivas viram preventivas.</p>
-      </div>
-      <div class="icard">
-        <div class="icard-ico">📊</div>
-        <h4>Dashboard Unificado</h4>
-        <p>Cada ativo, km e falha visível em tempo real.</p>
-      </div>
-      <div class="icard">
-        <div class="icard-ico">⚙️</div>
-        <h4>Manutenção por Condição</h4>
-        <p>Intervenção baseada em estado real, não em calendário.</p>
-      </div>
-    </div>
+    <p class="innov-sub">Dimensionamento planejado para 851 km com gestão integrada de ativos ITS: fibra, CFTV, SATs, rádio, energia e arrecadação em contrato único, com ciclos de manutenção preventiva e preditiva integrados.</p>
 
     <div class="tr-ref">
-      <div>
-        <div class="tr-ref-label">Estrutura AIVX para a Araguaia</div>
-        <p>Dimensionamento planejado para 851 km com gestão integrada de ativos ITS: fibra, CFTV, SATs, rádio, energia e arrecadação em contrato único.</p>
-      </div>
+      <div class="tr-ref-label">Estrutura AIVX para a Araguaia</div>
       <div class="tr-stats">
         <div><div class="tr-stat-n">56</div><div class="tr-stat-l">profissionais</div></div>
         <div><div class="tr-stat-n">27</div><div class="tr-stat-l">viaturas</div></div>
+        <div><div class="tr-stat-n">4</div><div class="tr-stat-l">bases operacionais</div></div>
         <div><div class="tr-stat-n">5 anos</div><div class="tr-stat-l">vigência</div></div>
       </div>
+    </div>
+
+    <div class="innov-topics">
+      <div class="itopic"><div class="itopic-ico">🧠</div><div class="itopic-t">IA para Detecção de Incidentes</div></div>
+      <div class="itopic"><div class="itopic-ico">📡</div><div class="itopic-t">IoT Preditivo em Campo</div></div>
+      <div class="itopic"><div class="itopic-ico">📊</div><div class="itopic-t">Dashboard Unificado</div></div>
+      <div class="itopic"><div class="itopic-ico">⚙️</div><div class="itopic-t">Manutenção Antes da Falha</div></div>
     </div>
   </div>
   <div class="slide-num">04 / 09</div>
@@ -847,10 +826,10 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
       </div>
       <div class="fcol prop">
         <div class="fcol-top"><div class="fdot g"></div> Proposta AIVX · gestão integrada</div>
-        <div class="fnum g">R$ 1,5M</div>
+        <div class="fnum g">R$ 1,89M</div>
         <div class="fperiod">por mês · contrato único · operação + gestão completa</div>
         <div class="flines">
-          <div class="fline"><span>Operação integrada ativos + Fibra + ITS</span><span class="fline-v accent">R$ 1,5M/mês</span></div>
+          <div class="fline"><span>Operação integrada ativos + Fibra + ITS</span><span class="fline-v accent">R$ 1,89M/mês</span></div>
           <div class="fline"><span>Gestão completa com NOC proativo</span><span class="fline-v g">incluso</span></div>
           <div class="fline"><span>Dashboards e relatórios ANTT</span><span class="fline-v g">incluso</span></div>
           <div class="fline"><span>Inovação IoT e IA</span><span class="fline-v g">incluso</span></div>
